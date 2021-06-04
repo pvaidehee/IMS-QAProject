@@ -1,63 +1,105 @@
 Coverage: 34%
-# Project Title
+# Inventory Management System (IMS)
 
-One Paragraph of project description goes here
+An IMS that an end user can interact with via cmd Interface. The application supports coustomer, item and order entities. Functionality is included for costomer-level usability and an administator.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+Clone this Repo (it's easier that way, without any issues)
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+Up-to-date version of Java installed on end-user's machine.
+
+Ensure the ```db.properties``` file located at ```src/main/resources``` matches the correct url and password for the desired database instance that is to be interacted with. ```ims``` should be appended to the end of the url.
+
+eg. ```jdbc:mysql://localhost:3306/ims```
+
+```initialdb.properties``` should contain the exact same url but without the name of the database to be created, this is to ensure the correct database is created if it does not already exist.
+
+eg. ```jdbc:mysql://localhost:3306/```
+
+Changing the database instance will mean the application will need to be repackaged with the Maven command ```mvn clean package```.
+
+
+### Running the system
+
+From the command line navigate to the root folder of the cloned git repository.
+
+Next, run the following command:
 
 ```
-Give examples
+java -jar ims-0.0.1-jar-with-dependencies.jar
 ```
 
-### Installing
+Once the system is running from the Command-Line Interface an end-user will be prompted to choose their access level.
 
-A step by step series of examples that tell you how to get a development env running
+An administrator is able to access CRUD functionality for all 3 entities. The password for the administrator access level is root.
 
-Say what the step will be
+A customer is able to choose from a list of options:
 
-```
-Give the example
-```
+A. Change their customer information.
 
-And repeat
+B. View all available items.
 
-```
-until finished
-```
+C. View their orders.
 
-End with an example of getting some data out of the system or using it for a little demo
+D. Create an order.
 
-## Running the tests
+E. Update one of their orders.
 
-Explain how to run the automated tests for this system. Break down into which tests and what they do
+F. Delete an order.
+
+
+## Testing
 
 ### Unit Tests 
 
-Explain what these tests test, why and how to run them
+Unit testing is done through JUnit and Mockito.
+
+The system is broadly based on the Data-Access-Object (DAO) Pattern, a structural pattern used to isolate the business layer from the persistence layer. This model has the general form of:
+
+* Controller
+* Service
+* Data Access </br>
+
+Unit testing is done in accordance with this model. So we have three general groups of unit tests:
+
+* Controlllers
+* Domain
+* DAO </br>
+
+The interactions between groups are mocked using Mockito.
+
+An example of a unit test for the Order Controller method:
 
 ```
-Give an example
-```
+@Mock
+private OrderDAO orderDAO;
+	
+@InjectMocks
+private OrderController orderController;
 
-### Integration Tests 
-Explain what these tests test, why and how to run them
+@Test
+public void testReadAll() {
+	List<Order> orders = new ArrayList<>();
+	orders.add(new Order(1L, 1L, 25.73, "03/07/21"));
+	Mockito.when(orderDAO.readAll()).thenReturn(orders);
 
-```
-Give an example
+	assertEquals(orders, this.orderController.readAll());
+
+	Mockito.verify(this.orderDAO, Mockito.times(1)).readAll();
+}
 ```
 
 ### And coding style tests
 
-Explain what these tests test and why
+Static code analysis is conducted through Sonarqube.
+
+To run the static code analysis, install Sonarqube, then navigate to the src folder and run the following command:
 
 ```
-Give an example
+mvn sonar:sonar - Dsonar.host.url=http://localhost:9000 -Dsonar.login=admin - Dsonar.password=admin
 ```
 
 ## Deployment
