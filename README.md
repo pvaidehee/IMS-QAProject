@@ -1,4 +1,4 @@
-Coverage: 34%
+Coverage: 83%
 # Inventory Management System (IMS)
 
 An IMS that an end user can interact with via cmd Interface. The application supports coustomer, item and order entities. Functionality is included for costomer-level usability and an administator.
